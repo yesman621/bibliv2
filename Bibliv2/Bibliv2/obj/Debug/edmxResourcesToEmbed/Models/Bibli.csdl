@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BIBLIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Auteur">
+    <Key>
+      <PropertyRef Name="idAut" />
+    </Key>
+    <Property Name="idAut" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="nomAuteur" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="prenomAut" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Livres" Relationship="Self.FKecrit_FK" FromRole="Auteur" ToRole="Livre" />
+  </EntityType>
+  <EntityType Name="Emprunt">
+    <Key>
+      <PropertyRef Name="idEmprunt" />
+    </Key>
+    <Property Name="idEmprunt" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="idEx" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="numCarte" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="dateEmprnt" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="dateMax" Type="DateTime" Nullable="false" Precision="0" />
+    <NavigationProperty Name="Emprunteur" Relationship="Self.FKemp_Emp" FromRole="Emprunt" ToRole="Emprunteur" />
+    <NavigationProperty Name="Exemplaire" Relationship="Self.FKemp_Exe_FK" FromRole="Emprunt" ToRole="Exemplaire" />
+  </EntityType>
+  <EntityType Name="Emprunteur">
+    <Key>
+      <PropertyRef Name="numCarte" />
+    </Key>
+    <Property Name="numCarte" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="nom" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="prenom" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="adresse" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Emprunts" Relationship="Self.FKemp_Emp" FromRole="Emprunteur" ToRole="Emprunt" />
+  </EntityType>
+  <EntityType Name="Exemplaire">
+    <Key>
+      <PropertyRef Name="idEx" />
+    </Key>
+    <Property Name="idEx" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="reference" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="anneEdition" Type="Decimal" Precision="4" Scale="0" Nullable="false" />
+    <Property Name="idliv" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="idME" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Emprunts" Relationship="Self.FKemp_Exe_FK" FromRole="Exemplaire" ToRole="Emprunt" />
+    <NavigationProperty Name="MaisonEdition" Relationship="Self.FKR_FK" FromRole="Exemplaire" ToRole="MaisonEdition" />
+    <NavigationProperty Name="Livre" Relationship="Self.FKref_FK" FromRole="Exemplaire" ToRole="Livre" />
+  </EntityType>
+  <EntityType Name="Livre">
+    <Key>
+      <PropertyRef Name="idliv" />
+    </Key>
+    <Property Name="idliv" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="titre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="anneeCrea" Type="Decimal" Precision="4" Scale="0" Nullable="false" />
+    <Property Name="descr" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="idAut" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Auteur" Relationship="Self.FKecrit_FK" FromRole="Livre" ToRole="Auteur" />
+    <NavigationProperty Name="Exemplaires" Relationship="Self.FKref_FK" FromRole="Livre" ToRole="Exemplaire" />
+  </EntityType>
+  <EntityType Name="MaisonEdition">
+    <Key>
+      <PropertyRef Name="idME" />
+    </Key>
+    <Property Name="idME" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="nom" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="ville" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="pays" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <NavigationProperty Name="Exemplaires" Relationship="Self.FKR_FK" FromRole="MaisonEdition" ToRole="Exemplaire" />
+  </EntityType>
+  <EntityType Name="sysdiagram">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="principal_id" Type="Int32" Nullable="false" />
+    <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="version" Type="Int32" />
+    <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <Association Name="FKecrit_FK">
+    <End Role="Auteur" Type="Self.Auteur" Multiplicity="1" />
+    <End Role="Livre" Type="Self.Livre" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Auteur">
+        <PropertyRef Name="idAut" />
+      </Principal>
+      <Dependent Role="Livre">
+        <PropertyRef Name="idAut" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKemp_Emp">
+    <End Role="Emprunteur" Type="Self.Emprunteur" Multiplicity="1" />
+    <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Emprunteur">
+        <PropertyRef Name="numCarte" />
+      </Principal>
+      <Dependent Role="Emprunt">
+        <PropertyRef Name="numCarte" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKemp_Exe_FK">
+    <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="1" />
+    <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Exemplaire">
+        <PropertyRef Name="idEx" />
+      </Principal>
+      <Dependent Role="Emprunt">
+        <PropertyRef Name="idEx" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKR_FK">
+    <End Role="MaisonEdition" Type="Self.MaisonEdition" Multiplicity="1" />
+    <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MaisonEdition">
+        <PropertyRef Name="idME" />
+      </Principal>
+      <Dependent Role="Exemplaire">
+        <PropertyRef Name="idME" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKref_FK">
+    <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+    <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Livre">
+        <PropertyRef Name="idliv" />
+      </Principal>
+      <Dependent Role="Exemplaire">
+        <PropertyRef Name="idliv" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BIBLIEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Auteurs" EntityType="Self.Auteur" />
+    <EntitySet Name="Emprunts" EntityType="Self.Emprunt" />
+    <EntitySet Name="Emprunteurs" EntityType="Self.Emprunteur" />
+    <EntitySet Name="Exemplaires" EntityType="Self.Exemplaire" />
+    <EntitySet Name="Livres" EntityType="Self.Livre" />
+    <EntitySet Name="MaisonEditions" EntityType="Self.MaisonEdition" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+    <AssociationSet Name="FKecrit_FK" Association="Self.FKecrit_FK">
+      <End Role="Auteur" EntitySet="Auteurs" />
+      <End Role="Livre" EntitySet="Livres" />
+    </AssociationSet>
+    <AssociationSet Name="FKemp_Emp" Association="Self.FKemp_Emp">
+      <End Role="Emprunteur" EntitySet="Emprunteurs" />
+      <End Role="Emprunt" EntitySet="Emprunts" />
+    </AssociationSet>
+    <AssociationSet Name="FKemp_Exe_FK" Association="Self.FKemp_Exe_FK">
+      <End Role="Exemplaire" EntitySet="Exemplaires" />
+      <End Role="Emprunt" EntitySet="Emprunts" />
+    </AssociationSet>
+    <AssociationSet Name="FKR_FK" Association="Self.FKR_FK">
+      <End Role="MaisonEdition" EntitySet="MaisonEditions" />
+      <End Role="Exemplaire" EntitySet="Exemplaires" />
+    </AssociationSet>
+    <AssociationSet Name="FKref_FK" Association="Self.FKref_FK">
+      <End Role="Livre" EntitySet="Livres" />
+      <End Role="Exemplaire" EntitySet="Exemplaires" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

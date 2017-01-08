@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BIBLIModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Auteur">
+    <Key>
+      <PropertyRef Name="idAut" />
+    </Key>
+    <Property Name="idAut" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="nomAuteur" Type="varchar" MaxLength="60" Nullable="false" />
+    <Property Name="prenomAut" Type="varchar" MaxLength="60" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Emprunt">
+    <Key>
+      <PropertyRef Name="idEmprunt" />
+    </Key>
+    <Property Name="idEmprunt" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="idEx" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="numCarte" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="dateEmprnt" Type="date" Nullable="false" />
+    <Property Name="dateMax" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Emprunteur">
+    <Key>
+      <PropertyRef Name="numCarte" />
+    </Key>
+    <Property Name="numCarte" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="nom" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="prenom" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="adresse" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="email" Type="varchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Exemplaire">
+    <Key>
+      <PropertyRef Name="idEx" />
+    </Key>
+    <Property Name="idEx" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="reference" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="anneEdition" Type="numeric" Precision="4" Scale="0" Nullable="false" />
+    <Property Name="idliv" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="idME" Type="varchar" MaxLength="5" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Livre">
+    <Key>
+      <PropertyRef Name="idliv" />
+    </Key>
+    <Property Name="idliv" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="titre" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="anneeCrea" Type="numeric" Precision="4" Scale="0" Nullable="false" />
+    <Property Name="descr" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="idAut" Type="varchar" MaxLength="5" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MaisonEdition">
+    <Key>
+      <PropertyRef Name="idME" />
+    </Key>
+    <Property Name="idME" Type="varchar" MaxLength="5" Nullable="false" />
+    <Property Name="nom" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="ville" Type="varchar" MaxLength="25" Nullable="false" />
+    <Property Name="pays" Type="varchar" MaxLength="30" Nullable="false" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <Association Name="FKecrit_FK">
+    <End Role="Auteur" Type="Self.Auteur" Multiplicity="1" />
+    <End Role="Livre" Type="Self.Livre" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Auteur">
+        <PropertyRef Name="idAut" />
+      </Principal>
+      <Dependent Role="Livre">
+        <PropertyRef Name="idAut" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKemp_Emp">
+    <End Role="Emprunteur" Type="Self.Emprunteur" Multiplicity="1" />
+    <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Emprunteur">
+        <PropertyRef Name="numCarte" />
+      </Principal>
+      <Dependent Role="Emprunt">
+        <PropertyRef Name="numCarte" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKemp_Exe_FK">
+    <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="1" />
+    <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Exemplaire">
+        <PropertyRef Name="idEx" />
+      </Principal>
+      <Dependent Role="Emprunt">
+        <PropertyRef Name="idEx" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKR_FK">
+    <End Role="MaisonEdition" Type="Self.MaisonEdition" Multiplicity="1" />
+    <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MaisonEdition">
+        <PropertyRef Name="idME" />
+      </Principal>
+      <Dependent Role="Exemplaire">
+        <PropertyRef Name="idME" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FKref_FK">
+    <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+    <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Livre">
+        <PropertyRef Name="idliv" />
+      </Principal>
+      <Dependent Role="Exemplaire">
+        <PropertyRef Name="idliv" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BIBLIModelStoreContainer">
+    <EntitySet Name="Auteur" EntityType="Self.Auteur" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Emprunt" EntityType="Self.Emprunt" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Emprunteur" EntityType="Self.Emprunteur" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Exemplaire" EntityType="Self.Exemplaire" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Livre" EntityType="Self.Livre" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MaisonEdition" EntityType="Self.MaisonEdition" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FKecrit_FK" Association="Self.FKecrit_FK">
+      <End Role="Auteur" EntitySet="Auteur" />
+      <End Role="Livre" EntitySet="Livre" />
+    </AssociationSet>
+    <AssociationSet Name="FKemp_Emp" Association="Self.FKemp_Emp">
+      <End Role="Emprunteur" EntitySet="Emprunteur" />
+      <End Role="Emprunt" EntitySet="Emprunt" />
+    </AssociationSet>
+    <AssociationSet Name="FKemp_Exe_FK" Association="Self.FKemp_Exe_FK">
+      <End Role="Exemplaire" EntitySet="Exemplaire" />
+      <End Role="Emprunt" EntitySet="Emprunt" />
+    </AssociationSet>
+    <AssociationSet Name="FKR_FK" Association="Self.FKR_FK">
+      <End Role="MaisonEdition" EntitySet="MaisonEdition" />
+      <End Role="Exemplaire" EntitySet="Exemplaire" />
+    </AssociationSet>
+    <AssociationSet Name="FKref_FK" Association="Self.FKref_FK">
+      <End Role="Livre" EntitySet="Livre" />
+      <End Role="Exemplaire" EntitySet="Exemplaire" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="c697638678ca4671b95055c614ccd182" Name="Diagram1">
+        <EntityTypeShape EntityType="BIBLIModel.Auteur" Width="1.5" PointX="0.75" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BIBLIModel.Emprunt" Width="1.5" PointX="7.5" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BIBLIModel.Emprunteur" Width="1.5" PointX="5.25" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BIBLIModel.Exemplaire" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BIBLIModel.Livre" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BIBLIModel.MaisonEdition" Width="1.5" PointX="3" PointY="5.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BIBLIModel.sysdiagram" Width="1.5" PointX="7.75" PointY="4.75" IsExpanded="true" />
+        <AssociationConnector Association="BIBLIModel.FKecrit_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="BIBLIModel.FKemp_Emp" ManuallyRouted="false" />
+        <AssociationConnector Association="BIBLIModel.FKemp_Exe_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="BIBLIModel.FKR_FK" ManuallyRouted="false" />
+        <AssociationConnector Association="BIBLIModel.FKref_FK" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,438 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BIBLIModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Auteur">
+          <Key>
+            <PropertyRef Name="idAut" />
+          </Key>
+          <Property Name="idAut" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="nomAuteur" Type="varchar" MaxLength="60" Nullable="false" />
+          <Property Name="prenomAut" Type="varchar" MaxLength="60" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Emprunt">
+          <Key>
+            <PropertyRef Name="idEmprunt" />
+          </Key>
+          <Property Name="idEmprunt" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="idEx" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="numCarte" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="dateEmprnt" Type="date" Nullable="false" />
+          <Property Name="dateMax" Type="date" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Emprunteur">
+          <Key>
+            <PropertyRef Name="numCarte" />
+          </Key>
+          <Property Name="numCarte" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="nom" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="prenom" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="adresse" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="email" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Exemplaire">
+          <Key>
+            <PropertyRef Name="idEx" />
+          </Key>
+          <Property Name="idEx" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="reference" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="anneEdition" Type="numeric" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="idliv" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="idME" Type="varchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Livre">
+          <Key>
+            <PropertyRef Name="idliv" />
+          </Key>
+          <Property Name="idliv" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="titre" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="anneeCrea" Type="numeric" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="descr" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="idAut" Type="varchar" MaxLength="5" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MaisonEdition">
+          <Key>
+            <PropertyRef Name="idME" />
+          </Key>
+          <Property Name="idME" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="nom" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ville" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="pays" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FKecrit_FK">
+          <End Role="Auteur" Type="Self.Auteur" Multiplicity="1" />
+          <End Role="Livre" Type="Self.Livre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auteur">
+              <PropertyRef Name="idAut" />
+            </Principal>
+            <Dependent Role="Livre">
+              <PropertyRef Name="idAut" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKemp_Emp">
+          <End Role="Emprunteur" Type="Self.Emprunteur" Multiplicity="1" />
+          <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Emprunteur">
+              <PropertyRef Name="numCarte" />
+            </Principal>
+            <Dependent Role="Emprunt">
+              <PropertyRef Name="numCarte" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKemp_Exe_FK">
+          <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="1" />
+          <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exemplaire">
+              <PropertyRef Name="idEx" />
+            </Principal>
+            <Dependent Role="Emprunt">
+              <PropertyRef Name="idEx" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKR_FK">
+          <End Role="MaisonEdition" Type="Self.MaisonEdition" Multiplicity="1" />
+          <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MaisonEdition">
+              <PropertyRef Name="idME" />
+            </Principal>
+            <Dependent Role="Exemplaire">
+              <PropertyRef Name="idME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKref_FK">
+          <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+          <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Livre">
+              <PropertyRef Name="idliv" />
+            </Principal>
+            <Dependent Role="Exemplaire">
+              <PropertyRef Name="idliv" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BIBLIModelStoreContainer">
+          <EntitySet Name="Auteur" EntityType="Self.Auteur" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Emprunt" EntityType="Self.Emprunt" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Emprunteur" EntityType="Self.Emprunteur" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Exemplaire" EntityType="Self.Exemplaire" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Livre" EntityType="Self.Livre" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MaisonEdition" EntityType="Self.MaisonEdition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FKecrit_FK" Association="Self.FKecrit_FK">
+            <End Role="Auteur" EntitySet="Auteur" />
+            <End Role="Livre" EntitySet="Livre" />
+          </AssociationSet>
+          <AssociationSet Name="FKemp_Emp" Association="Self.FKemp_Emp">
+            <End Role="Emprunteur" EntitySet="Emprunteur" />
+            <End Role="Emprunt" EntitySet="Emprunt" />
+          </AssociationSet>
+          <AssociationSet Name="FKemp_Exe_FK" Association="Self.FKemp_Exe_FK">
+            <End Role="Exemplaire" EntitySet="Exemplaire" />
+            <End Role="Emprunt" EntitySet="Emprunt" />
+          </AssociationSet>
+          <AssociationSet Name="FKR_FK" Association="Self.FKR_FK">
+            <End Role="MaisonEdition" EntitySet="MaisonEdition" />
+            <End Role="Exemplaire" EntitySet="Exemplaire" />
+          </AssociationSet>
+          <AssociationSet Name="FKref_FK" Association="Self.FKref_FK">
+            <End Role="Livre" EntitySet="Livre" />
+            <End Role="Exemplaire" EntitySet="Exemplaire" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BIBLIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Auteur">
+          <Key>
+            <PropertyRef Name="idAut" />
+          </Key>
+          <Property Name="idAut" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nomAuteur" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="prenomAut" Type="String" MaxLength="60" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Livres" Relationship="Self.FKecrit_FK" FromRole="Auteur" ToRole="Livre" />
+        </EntityType>
+        <EntityType Name="Emprunt">
+          <Key>
+            <PropertyRef Name="idEmprunt" />
+          </Key>
+          <Property Name="idEmprunt" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="idEx" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="numCarte" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="dateEmprnt" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="dateMax" Type="DateTime" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Emprunteur" Relationship="Self.FKemp_Emp" FromRole="Emprunt" ToRole="Emprunteur" />
+          <NavigationProperty Name="Exemplaire" Relationship="Self.FKemp_Exe_FK" FromRole="Emprunt" ToRole="Exemplaire" />
+        </EntityType>
+        <EntityType Name="Emprunteur">
+          <Key>
+            <PropertyRef Name="numCarte" />
+          </Key>
+          <Property Name="numCarte" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nom" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="prenom" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="adresse" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Emprunts" Relationship="Self.FKemp_Emp" FromRole="Emprunteur" ToRole="Emprunt" />
+        </EntityType>
+        <EntityType Name="Exemplaire">
+          <Key>
+            <PropertyRef Name="idEx" />
+          </Key>
+          <Property Name="idEx" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="reference" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="anneEdition" Type="Decimal" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="idliv" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="idME" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Emprunts" Relationship="Self.FKemp_Exe_FK" FromRole="Exemplaire" ToRole="Emprunt" />
+          <NavigationProperty Name="MaisonEdition" Relationship="Self.FKR_FK" FromRole="Exemplaire" ToRole="MaisonEdition" />
+          <NavigationProperty Name="Livre" Relationship="Self.FKref_FK" FromRole="Exemplaire" ToRole="Livre" />
+        </EntityType>
+        <EntityType Name="Livre">
+          <Key>
+            <PropertyRef Name="idliv" />
+          </Key>
+          <Property Name="idliv" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="titre" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="anneeCrea" Type="Decimal" Precision="4" Scale="0" Nullable="false" />
+          <Property Name="descr" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="idAut" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Auteur" Relationship="Self.FKecrit_FK" FromRole="Livre" ToRole="Auteur" />
+          <NavigationProperty Name="Exemplaires" Relationship="Self.FKref_FK" FromRole="Livre" ToRole="Exemplaire" />
+        </EntityType>
+        <EntityType Name="MaisonEdition">
+          <Key>
+            <PropertyRef Name="idME" />
+          </Key>
+          <Property Name="idME" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="nom" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ville" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="pays" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Exemplaires" Relationship="Self.FKR_FK" FromRole="MaisonEdition" ToRole="Exemplaire" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FKecrit_FK">
+          <End Role="Auteur" Type="Self.Auteur" Multiplicity="1" />
+          <End Role="Livre" Type="Self.Livre" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Auteur">
+              <PropertyRef Name="idAut" />
+            </Principal>
+            <Dependent Role="Livre">
+              <PropertyRef Name="idAut" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKemp_Emp">
+          <End Role="Emprunteur" Type="Self.Emprunteur" Multiplicity="1" />
+          <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Emprunteur">
+              <PropertyRef Name="numCarte" />
+            </Principal>
+            <Dependent Role="Emprunt">
+              <PropertyRef Name="numCarte" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKemp_Exe_FK">
+          <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="1" />
+          <End Role="Emprunt" Type="Self.Emprunt" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Exemplaire">
+              <PropertyRef Name="idEx" />
+            </Principal>
+            <Dependent Role="Emprunt">
+              <PropertyRef Name="idEx" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKR_FK">
+          <End Role="MaisonEdition" Type="Self.MaisonEdition" Multiplicity="1" />
+          <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="MaisonEdition">
+              <PropertyRef Name="idME" />
+            </Principal>
+            <Dependent Role="Exemplaire">
+              <PropertyRef Name="idME" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FKref_FK">
+          <End Role="Livre" Type="Self.Livre" Multiplicity="1" />
+          <End Role="Exemplaire" Type="Self.Exemplaire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Livre">
+              <PropertyRef Name="idliv" />
+            </Principal>
+            <Dependent Role="Exemplaire">
+              <PropertyRef Name="idliv" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BIBLIEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Auteurs" EntityType="Self.Auteur" />
+          <EntitySet Name="Emprunts" EntityType="Self.Emprunt" />
+          <EntitySet Name="Emprunteurs" EntityType="Self.Emprunteur" />
+          <EntitySet Name="Exemplaires" EntityType="Self.Exemplaire" />
+          <EntitySet Name="Livres" EntityType="Self.Livre" />
+          <EntitySet Name="MaisonEditions" EntityType="Self.MaisonEdition" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
+          <AssociationSet Name="FKecrit_FK" Association="Self.FKecrit_FK">
+            <End Role="Auteur" EntitySet="Auteurs" />
+            <End Role="Livre" EntitySet="Livres" />
+          </AssociationSet>
+          <AssociationSet Name="FKemp_Emp" Association="Self.FKemp_Emp">
+            <End Role="Emprunteur" EntitySet="Emprunteurs" />
+            <End Role="Emprunt" EntitySet="Emprunts" />
+          </AssociationSet>
+          <AssociationSet Name="FKemp_Exe_FK" Association="Self.FKemp_Exe_FK">
+            <End Role="Exemplaire" EntitySet="Exemplaires" />
+            <End Role="Emprunt" EntitySet="Emprunts" />
+          </AssociationSet>
+          <AssociationSet Name="FKR_FK" Association="Self.FKR_FK">
+            <End Role="MaisonEdition" EntitySet="MaisonEditions" />
+            <End Role="Exemplaire" EntitySet="Exemplaires" />
+          </AssociationSet>
+          <AssociationSet Name="FKref_FK" Association="Self.FKref_FK">
+            <End Role="Livre" EntitySet="Livres" />
+            <End Role="Exemplaire" EntitySet="Exemplaires" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BIBLIModelStoreContainer" CdmEntityContainer="BIBLIEntities">
+          <EntitySetMapping Name="Auteurs">
+            <EntityTypeMapping TypeName="BIBLIModel.Auteur">
+              <MappingFragment StoreEntitySet="Auteur">
+                <ScalarProperty Name="idAut" ColumnName="idAut" />
+                <ScalarProperty Name="nomAuteur" ColumnName="nomAuteur" />
+                <ScalarProperty Name="prenomAut" ColumnName="prenomAut" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Emprunts">
+            <EntityTypeMapping TypeName="BIBLIModel.Emprunt">
+              <MappingFragment StoreEntitySet="Emprunt">
+                <ScalarProperty Name="idEmprunt" ColumnName="idEmprunt" />
+                <ScalarProperty Name="idEx" ColumnName="idEx" />
+                <ScalarProperty Name="numCarte" ColumnName="numCarte" />
+                <ScalarProperty Name="dateEmprnt" ColumnName="dateEmprnt" />
+                <ScalarProperty Name="dateMax" ColumnName="dateMax" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Emprunteurs">
+            <EntityTypeMapping TypeName="BIBLIModel.Emprunteur">
+              <MappingFragment StoreEntitySet="Emprunteur">
+                <ScalarProperty Name="numCarte" ColumnName="numCarte" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="prenom" ColumnName="prenom" />
+                <ScalarProperty Name="adresse" ColumnName="adresse" />
+                <ScalarProperty Name="email" ColumnName="email" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Exemplaires">
+            <EntityTypeMapping TypeName="BIBLIModel.Exemplaire">
+              <MappingFragment StoreEntitySet="Exemplaire">
+                <ScalarProperty Name="idEx" ColumnName="idEx" />
+                <ScalarProperty Name="reference" ColumnName="reference" />
+                <ScalarProperty Name="anneEdition" ColumnName="anneEdition" />
+                <ScalarProperty Name="idliv" ColumnName="idliv" />
+                <ScalarProperty Name="idME" ColumnName="idME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Livres">
+            <EntityTypeMapping TypeName="BIBLIModel.Livre">
+              <MappingFragment StoreEntitySet="Livre">
+                <ScalarProperty Name="idliv" ColumnName="idliv" />
+                <ScalarProperty Name="titre" ColumnName="titre" />
+                <ScalarProperty Name="anneeCrea" ColumnName="anneeCrea" />
+                <ScalarProperty Name="descr" ColumnName="descr" />
+                <ScalarProperty Name="idAut" ColumnName="idAut" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MaisonEditions">
+            <EntityTypeMapping TypeName="BIBLIModel.MaisonEdition">
+              <MappingFragment StoreEntitySet="MaisonEdition">
+                <ScalarProperty Name="idME" ColumnName="idME" />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+                <ScalarProperty Name="ville" ColumnName="ville" />
+                <ScalarProperty Name="pays" ColumnName="pays" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="BIBLIModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
