@@ -61,9 +61,6 @@ create table Livre (
      idAut varchar(5) not null,
      constraint ID_Livre_ID primary key (idliv));
 
-	insert into  Livre values
-( '00001','Les miserables',1971,'...','00001'),
-( '00002','Germinal',1981,'...','00002');
 	 
 create table MaisonEdition (
      idME varchar(5) not null,
